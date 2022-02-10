@@ -8,8 +8,12 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <asp:Label ID="Label1" runat="server" Text="User Profile"></asp:Label>
-        <br />
+        <h2>
+            <br />
+            <asp:Label ID="Label1" runat="server" Text="User Profile:"></asp:Label>
+            <br />
+            <br />
+        </h2>        <br />
         <br />
         <asp:Label ID="Label2" runat="server" Text="Email:"></asp:Label>
         
@@ -20,6 +24,7 @@
 
         <br />
 
+        <asp:Button ID="btn_changepwd" runat="server" Height="48px" OnClick="ChangePwd" Text="Change Password" Width="200px" />
         <asp:Button ID="btn_Logout" runat="server" Height="48px" OnClick="Logout" Text="Logout" Width="200px" />
 
     </form>

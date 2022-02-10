@@ -11,7 +11,7 @@ namespace AS_Assignment
 {
 
 
-    public partial class Success
+    public partial class ChangePassword
     {
 
         /// <summary>
@@ -33,57 +33,75 @@ namespace AS_Assignment
         protected global::System.Web.UI.WebControls.Label Label1;
 
         /// <summary>
-        /// Label2 control.
+        /// Label3 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label2;
+        protected global::System.Web.UI.WebControls.Label Label3;
 
         /// <summary>
-        /// lbl_userID control.
+        /// tb_pwd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_userID;
+        protected global::System.Web.UI.WebControls.TextBox tb_pwd;
 
         /// <summary>
-        /// Label4 control.
+        /// lbl_pwd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label4;
+        protected global::System.Web.UI.WebControls.Label lbl_pwd;
 
         /// <summary>
-        /// lbl_creditcard control.
+        /// Label5 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_creditcard;
+        protected global::System.Web.UI.WebControls.Label Label5;
 
         /// <summary>
-        /// btn_changepwd control.
+        /// tb_cfmpwd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_changepwd;
+        protected global::System.Web.UI.WebControls.TextBox tb_cfmpwd;
 
         /// <summary>
-        /// btn_Logout control.
+        /// lbl_cfmpwd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_Logout;
+        protected global::System.Web.UI.WebControls.Label lbl_cfmpwd;
+
+        /// <summary>
+        /// btn_Submit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btn_Submit;
+
+        /// <summary>
+        /// lbl_policy control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_policy;
     }
 }

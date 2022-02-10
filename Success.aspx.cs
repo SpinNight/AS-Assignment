@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -117,10 +118,11 @@ namespace AS_Assignment
 
         protected void Logout(object sender, EventArgs e)
         {
+            userID = (string) Session["UserID"];
             Session.Clear();
             Session.Abandon();
             Session.RemoveAll();
-
+            logoutlog("Successful", userID);
             Response.Redirect("Login.aspx", false);
 
             if (Request.Cookies["ASP.NET_SessionId"] != null)
@@ -134,6 +136,41 @@ namespace AS_Assignment
                 Response.Cookies["AuthToken"].Value = string.Empty;
                 Response.Cookies["AuthToken"].Expires = DateTime.Now.AddMonths(-20);
             }
+        }
+        public void logoutlog(string status, string userid)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(MYDBConnectionstring))
+                {
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Auditlog VALUES(@Action,@Userid,@OccurredAt,@Status)"))
+                    {
+                        using (SqlDataAdapter sda = new SqlDataAdapter())
+                        {
+                            cmd.CommandType = CommandType.Text;
+                            cmd.Parameters.AddWithValue("@Action", "Logout");
+                            cmd.Parameters.AddWithValue("@Userid", userid);
+                            cmd.Parameters.AddWithValue("@OccurredAt", DateTime.Now);
+                            cmd.Parameters.AddWithValue("@Status", status);
+                            cmd.Connection = con;
+                            con.Open();
+                            cmd.ExecuteNonQuery();
+                            con.Close();
+                        }
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        protected void ChangePwd(object sender, EventArgs e)
+        {
+            Response.Redirect("ChangePassword.aspx", false);
         }
     }
 }

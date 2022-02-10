@@ -72,7 +72,7 @@
     <table class="style1">
         <tr>
             <td>
-                <asp:Label ID="Label2" runat="server" Text="Email (UserID)"></asp:Label>
+                <asp:Label ID="Label2" runat="server" Text="Email"></asp:Label>
             </td>
             <td>
                 <asp:TextBox ID="tb_userid" runat="server" Height="36px" Width="280px" onkeyup="validateemail()"></asp:TextBox>

@@ -11,7 +11,7 @@ namespace AS_Assignment
 {
 
 
-    public partial class Success
+    public partial class Verification
     {
 
         /// <summary>
@@ -42,48 +42,30 @@ namespace AS_Assignment
         protected global::System.Web.UI.WebControls.Label Label2;
 
         /// <summary>
-        /// lbl_userID control.
+        /// tb_code control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_userID;
+        protected global::System.Web.UI.WebControls.TextBox tb_code;
 
         /// <summary>
-        /// Label4 control.
+        /// lbl_code control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label4;
+        protected global::System.Web.UI.WebControls.Label lbl_code;
 
         /// <summary>
-        /// lbl_creditcard control.
+        /// btn_Submit control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_creditcard;
-
-        /// <summary>
-        /// btn_changepwd control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_changepwd;
-
-        /// <summary>
-        /// btn_Logout control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_Logout;
+        protected global::System.Web.UI.WebControls.Button btn_Submit;
     }
 }

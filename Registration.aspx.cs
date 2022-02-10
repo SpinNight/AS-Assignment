@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -26,46 +27,52 @@ namespace AS_Assignment
         {
 
         }
-        private bool checkIsEmpty(string email, string first, string last, string pwd, string cfmpwd, string ccard)
-        {
-            if (String.IsNullOrEmpty(email))
-            {
-                lbl_emailchecker.Text = "Input field is empty!";
-                return true;
-            }
-            if (String.IsNullOrEmpty(first))
-            {
-               lbl_first.Text = "Input field is empty!";
-                return true;
-            }
-            if (String.IsNullOrEmpty(last))
-            {
-                lbl_last.Text = "Input field is empty!";
-                return true;
-            }
-            if (String.IsNullOrEmpty(pwd))
-            {
-                lbl_pwdchecker.Text = "Input field is empty!";
-                return true;
-            }
-            if (String.IsNullOrEmpty(cfmpwd))
-            {
-                lbl_cfpwd.Text = "Input field is empty";
-                return true;
-            }
-            if (String.IsNullOrEmpty(ccard))
-            {
-                lbl_creditcardchecker.Text = "Input field is empty";
-                return true;
-            }
 
+        private bool emailExist(string email)
+        {
+            using (SqlConnection con = new SqlConnection(MYDBConnectionString))
+            {
+                con.Open();
+                SqlCommand check_User_Name = new SqlCommand("SELECT * FROM Account WHERE Email = @Email", con);
+                check_User_Name.Parameters.AddWithValue("@Email", HttpUtility.HtmlEncode(email));
+                SqlDataReader reader = check_User_Name.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    lbl_emailchecker.Text = "Email already exist!";
+                    lbl_emailchecker.ForeColor = Color.Red;
+                    return true;
+                }
+                con.Close();
+
+            }
             return false;
         }
+
+
         private bool emailIsValid(string email)
         {
+            string mailAccount = System.Configuration.ConfigurationManager.ConnectionStrings["mailAccount"].ConnectionString;
+            string mailPassword = System.Configuration.ConfigurationManager.ConnectionStrings["mailPassword"].ConnectionString;
             try
             {
-                MailAddress m = new MailAddress(email);
+                Random random = new Random();
+                int code = random.Next(000000, 1000000);
+
+                Session["Emailcode"] = code;
+
+                MailMessage mm = new MailMessage();
+                mm.To.Add(new MailAddress(email, "Request for Verification"));
+                mm.From = new MailAddress(mailAccount);
+                mm.Body = "Your verification code is: " + code;
+                mm.IsBodyHtml = true;
+                mm.Subject = "Verification";
+                SmtpClient smcl = new SmtpClient();
+                smcl.Host = "smtp.gmail.com";
+                smcl.Port = 587;
+                smcl.Credentials = new NetworkCredential(mailAccount, mailPassword);
+                smcl.EnableSsl = true;
+                smcl.Send(mm);
+
                 return true;
             }
             catch (FormatException)
@@ -150,15 +157,22 @@ namespace AS_Assignment
             }
             else
             {
-                if (emailIsValid(email))
+                if(!emailExist(email))
                 {
-                    lbl_emailchecker.Text = "Valid Email";
-                    lbl_emailchecker.ForeColor = Color.Green;
+                    if (emailIsValid(email))
+                    {
+                        lbl_emailchecker.Text = "Valid Email";
+                        lbl_emailchecker.ForeColor = Color.Green;
+                    }
+                    else
+                    {
+                        lbl_emailchecker.Text = "Invalid Email";
+                        lbl_emailchecker.ForeColor = Color.Red;
+                        return;
+                    }
                 }
                 else
                 {
-                    lbl_emailchecker.Text = "Invalid Email";
-                    lbl_emailchecker.ForeColor = Color.Red;
                     return;
                 }
             }
@@ -210,7 +224,6 @@ namespace AS_Assignment
                 SHA512Managed hashing = new SHA512Managed();
 
                 string pwdWithSalt = pwd + salt;
-                byte[] plainHash = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwd));
                 byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
 
                 finalHash = Convert.ToBase64String(hashWithSalt);
@@ -261,7 +274,7 @@ namespace AS_Assignment
 
             createAccount();
 
-            Response.Redirect("Login.aspx", false);
+            Response.Redirect("Verification.aspx", false);
         }
         protected void createAccount()
         {
@@ -270,7 +283,7 @@ namespace AS_Assignment
             {
                 using (SqlConnection con = new SqlConnection(MYDBConnectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Account VALUES(@FirstName,@LastName,@CreditCardNumber,@Email,@DateOfBirth,@Photo,@PasswordHash,@PasswordSalt,@IV,@Key,@FailedAttempt)"))
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Account VALUES(@FirstName,@LastName,@CreditCardNumber,@Email,@DateOfBirth,@Photo,@PasswordHash,@PasswordSalt,@IV,@Key,@FailedAttempt,@IsVerified,@LastLogin,@PasswordHistory,@LastUpdatedPassword)"))
                     {
                         using (SqlDataAdapter sda = new SqlDataAdapter())
                         {
@@ -278,6 +291,7 @@ namespace AS_Assignment
                             cmd.Parameters.AddWithValue("@FirstName", HttpUtility.HtmlEncode(tb_firstname.Text.Trim()));
                             cmd.Parameters.AddWithValue("@LastName", HttpUtility.HtmlEncode(tb_lastname.Text.Trim()));
                             cmd.Parameters.AddWithValue("@Email", HttpUtility.HtmlEncode(tb_userid.Text.Trim()));
+                            Session["Email"] = HttpUtility.HtmlEncode(tb_userid.Text.Trim());
                             cmd.Parameters.AddWithValue("@CreditCardNumber", HttpUtility.HtmlEncode(Convert.ToBase64String(encryptData(tb_creditcard.Text.Trim()))));
                             cmd.Parameters.AddWithValue("@PasswordHash", finalHash);
                             cmd.Parameters.AddWithValue("@PasswordSalt", salt);
@@ -286,6 +300,12 @@ namespace AS_Assignment
                             cmd.Parameters.AddWithValue("@IV", Convert.ToBase64String(IV));
                             cmd.Parameters.AddWithValue("@Key", Convert.ToBase64String(Key));
                             cmd.Parameters.AddWithValue("@FailedAttempt", 0);
+                            cmd.Parameters.AddWithValue("@IsVerified", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@LastLogin", DBNull.Value);
+                            List<string> passwordlist = new List<string>();
+                            passwordlist.Add(finalHash);
+                            cmd.Parameters.AddWithValue("@PasswordHistory", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@LastUpdatedPassword", DateTime.Now);
                             cmd.Connection = con;
                             con.Open();
                             cmd.ExecuteNonQuery();

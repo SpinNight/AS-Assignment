@@ -18,7 +18,7 @@
         <table>
             <tr>
                 <td>
-                    <asp:Label ID="Label2" runat="server" Text="User ID/Email"></asp:Label>
+                    <asp:Label ID="Label2" runat="server" Text="Email"></asp:Label>
                 </td>
                 <td>
                     <asp:TextBox ID="tb_userid" runat="server" Height="16px" Width="280px"></asp:TextBox>
@@ -36,7 +36,13 @@
                 <td></td>
                 <td>
                     <asp:Button ID="btn_Submit" runat="server" Height="48px"
-                        OnClick="btn_Submit_Click" Text="Submit" Width="288px" />
+                        OnClick="btn_Submit_Click" Text="Login" Width="288px" />
+                </td>
+            </tr>
+             <tr>
+                <td></td>
+                <td>
+                    Click <a href="Registration.aspx">here</a> to register!
                 </td>
             </tr>
         </table>
